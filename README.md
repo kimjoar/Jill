@@ -1,6 +1,6 @@
 # Jill
 
-Simple backup using Dropbox.
+Simple backup using Dropbox. Creates a Tarball of the backup before it is moved to Dropbox.
 
 An example on how to use Jill:
 
@@ -16,6 +16,6 @@ An example on how to use Jill:
   backup.backup!
 </pre>
 
-Only tested on OS X Leopard.
+Only tested on Mac OS X Leopard.
 
 Name inspired by [Jill Price](http://en.wikipedia.org/wiki/Jill_Price).

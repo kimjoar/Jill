@@ -10,7 +10,7 @@ class Jill
     @backup = File.join(@current, @name)
 
     # Make sure that we don't try to backup the backup
-    exclude(@backup)
+    exclude @backup
   end
   
   def dropbox_path
@@ -38,14 +38,14 @@ class Jill
 
   def backup!
     paths = @paths.join(" ")
-    excluded = @excluded.collect {|p| "--exclude=" + p}.join(" ")
+    excluded = @excluded.collect {|p| '--exclude "' + p + '"'}.join(" ")
     
-    print "Backing up the files ..."
-    system("tar -czf #{@backup} #{paths} #{excluded}")
-    print "... Done"
-    
-    print "Moving the file to the Dropbox folder ..."
+    puts "Backing up the files ..."
+    system("tar -czvf #{@backup} #{excluded} #{paths}")
+    puts "... Done"
+
+    puts "Moving the file to the Dropbox folder ..."
     FileUtils.mv(@backup, File.join(dropbox_path, @name))
-    print "... Done"
+    puts "... Done"
   end
 end

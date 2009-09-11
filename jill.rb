@@ -12,7 +12,7 @@ class Jill
     # Make sure that we don't try to backup the backup
     exclude @backup
   end
-  
+
   def dropbox_path
     return @path unless @path == nil
 
@@ -36,6 +36,13 @@ class Jill
     @excluded << path
   end
 
+  def encrypt(algorithm, password = nil)
+    @encrypt = true
+    @algorithm = algorithm
+    @password = password
+    @encrypted = File.join(@current, 'archive.enc')
+  end
+
   def backup!
     paths = @paths.join(" ")
     excluded = @excluded.collect {|p| '--exclude "' + p + '"'}.join(" ")
@@ -44,8 +51,22 @@ class Jill
     system("tar -czvf #{@backup} #{excluded} #{paths}")
     puts "... Done"
 
+    if @encrypt
+      puts "Encypting file using the algorithm %s" % @algorithm
+      system("openssl enc -%s -salt -in %s -out %s -pass pass:%s" % [@algorithm, @backup, @encrypted, @password])
+    end
+
     puts "Moving the file to the Dropbox folder ..."
-    FileUtils.mv(@backup, File.join(dropbox_path, @name))
+    if @encrypt
+      FileUtils.mv(@encrypted, File.join(dropbox_path, 'archive.enc'))
+      FileUtils.rm(@backup)
+    else
+      FileUtils.mv(@backup, File.join(dropbox_path, @name))
+    end
     puts "... Done"
+  end
+  
+  def decrypt!(file, algorithm, password)
+    system("openssl enc -d -%s -in %s -pass pass:%s" % [@algorithm, @file, @password])
   end
 end

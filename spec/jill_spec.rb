@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 class Jill
-  def system(*args)
+  def backup!
 
   end
 end

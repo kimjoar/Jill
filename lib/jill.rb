@@ -35,11 +35,11 @@ class Jill
   end
 
   def add(path)
-    paths << '"' + path + '"'
+    paths << %Q("#{path}")
   end
 
   def exclude(path)
-    excluded_paths << '--exclude="' + path + '"'
+    excluded_paths << %Q(--exclude="#{path}")
   end
 
   def encrypt(algorithm, password)
@@ -83,6 +83,6 @@ class Jill
   end
 
   def encrypt!
-    system("openssl enc -%s -salt -in %s -out %s -pass pass:%s" % [algorithm, filename + '.tar.gz', filename + '.' + algorithm, password])
+    system "openssl enc -%s -salt -in %s -out %s -pass pass:%s" % [algorithm, filename + '.tar.gz', filename + '.' + algorithm, password]
   end
 end
